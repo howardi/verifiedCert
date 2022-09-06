@@ -5,15 +5,40 @@ const _ = require("lodash");
 const pdfDoc = require("pdfkit");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
+const nodemailer = require('nodemailer');
 const base64ToImage = require('base64-to-image');
 const { resolve } = require("path");
 const itemModel = require(`${__dirname}/schema.js`);
+
 
 const CertCollection = itemModel.certifiedUser;
 const Item = itemModel.Item;
 
 const port = 5000;
 const app = express();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'youremail@gmail.com',
+    pass: 'yourpassword'
+  }
+});
+const mailOptions = {
+  from: 'youremail@gmail.com',
+  to: 'myfriend@yahoo.com',
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+
 
 //Middlewares
 app.use(express.urlencoded({extended: true}));
